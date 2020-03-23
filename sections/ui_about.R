@@ -3,48 +3,50 @@ body_about <- dashboardBody(
     fluidRow(
       column(
         box(
-          title = div("About this project", style = "padding-left: 20px", class = "h2"),
+          title = div(HTML("&Uuml;ber dieses Projekt"), style = "padding-left: 20px", class = "h2"),
           column(
-            "This dashboard shows recent developments of the COVID-19 pandemic. The latest
-            open data on the COVID-19 spread are regularly downloaded and displayed in
-            a map, summary tables, key figures and plots.",
+            HTML("Dieses Dashboard zeigt die j&uuml;ngsten Entwicklungen der COVID-19-Pandemie in der Schweiz. Die neuesten
+            Daten zur COVID-19-Verbreitung werden regelm&auml;ssig heruntergeladen und mit Hilfe einer Karte,
+            zusammenfassenden Tabellen, Schl&uuml;sselzahlen und Diagrammen visualisiert. Urspr&uuml;nglich wurde ein"),
+            tags$a(href = "https://chschoenenberger.shinyapps.io/covid19_dashboard/", "globales Dashboard"),
+            HTML("entwickelt. Dieses wurde nun f&uuml;r die Schweiz angepasst."),
             tags$br(),
             h3("Motivation"),
-            "Various companies thought that a global crisis is an excellent opportunity to
-            show case their technologies. Therefore, my idea was to show that open-source
-            technologies, such as R Shiny, can be used to create a decent dashboard in few hours.
-            Furthermore, the most popular COVID-19 dashboard (",
-            tags$a(href = "https://coronavirus.jhu.edu/map.html", "Johns Hopkins COVID-19"), ") is styled rather
-            alarmist. Therefore, a more neutral dashboard might help to dampen the already
-            existing hysteria a little.",
-            h4("Why Open Source?"),
-            "My hope is that this dashboard can help researchers around the world to get a
-            better overview of the current situation concerning the COVID-19 idea. I hereby
-            invite all of you to contribute to this project with additional visualizations,
-            information etc.",
+            HTML("Verschiedene Unternehmen waren der Meinung, dass eine globale Krise eine ausgezeichnete Gelegenheit ist, um
+            ihre Technologien zu pr&auml;sentieren. Daher war meine Idee, zu zeigen, dass Open-Source
+            Technologien, wie z.B. R Shiny, verwendet werden k&ouml;nnen, um in wenigen Stunden ein Dashboard zu erstellen.
+            Dar&uuml;ber hinaus ist das beliebteste COVID-19-Dashboard ("),
+            tags$a(href = "https://coronavirus.jhu.edu/map.html", "Johns Hopkins COVID-19"), HTML(") eher alarmierend gestaltet.
+            Ein neutraleres Dashboard k&ouml;nnte daher helfen, die bereits bestehende Hysterie etwas zu d&auml;mpfen."),
+            h4("Wieso Open Source?"),
+            HTML("Ich hoffe, dass dieses Dashboard Forschenden in der Schweiz und auf der ganzen Welt helfen kann, einen
+            besseren &Uuml;berblick &uuml;ber die aktuelle COVID-19-Idee Situation zu erhalten. Ich lade hiermit alle ein, mit
+            zus&auml;tzlichen Visualisierungen, Informationen usw. zu diesem Projekt beizutragen."),
             tags$br(),
             tags$br(),
-            "Find more thoughts on this dashboard from Christoph Schoenenberger in this",
+            HTML("Finden Sie mehr Gedanken von Christoph Sch&ouml;nenberger zu diesem Thema in diesem"),
             tags$a(href = "https://medium.com/@ch.schoenenberger/covid-19-open-source-dashboard-fa1d2b4cd985",
-              "Medium article"), ".",
-            h3("Data"),
-            tags$ul(
-              tags$li(tags$b("COVID-19 data:"), tags$a(href = "https://github.com/CSSEGISandData/COVID-19",
-                "Johns Hopkins CSSE")),
-              tags$li(tags$b("Population data:"), tags$a(href = "https://data.worldbank.org/indicator/SP.POP.TOTL",
-                "The World Bank"), "& Wikipedia for countries which are not in World Bank data set.")
-            ),
-            h3("Bugs, Issues & Enhancement Requests"),
-            "If you find any bug / issue or have an idea how to improve the dashboard,
-            please create an issue on ", tags$a(href = "https://github.com/chschoenenberger/covid19_dashboard/issues",
-              "Github"), ". I will try to look into it as soon as possible.",
-            h3("Contribute"),
-            "If you want to add any visualization or further information feel free to create
-            a pull request on ", tags$a(href = "https://github.com/chschoenenberger/covid19_dashboard", "Github"), ".
-            For major rework either fork the repository or create an issue so we can discuss it.",
-            h3("Developers"),
-            "Christoph Schoenenberger | Data Scientist @",
-            tags$a(href = "https://www.zuehlke.com/ch/en/", "Zuehlke Engineering"), "|",
+              "Medium Artikel"), ".",
+            h3("Daten"),
+            HTML("Die COVID-19 Daten f&uuml;r die Schweiz werden von"), tags$a(href = "https://twitter.com/skepteis", "Daniel Probst"),
+            HTML("mehrmals t&auml;glich von verschiedenen Quellen zusammengetragen und auf"),
+            tags$a(href = "https://github.com/daenuprobst/covid19-cases-switzerland", "Github"), HTML("ver&ouml;ffentlicht.
+            Herzlichen Dank an dieser Stelle f&uuml;r die grossartige Arbeit!<br>
+            Hinweis: F&uuml;r die Schweiz gibt es momentan keine Daten zu den geheilten F&auml;llen. Daher werden diese auf diesem
+            Dashboard bis solche Verf&uuml;gbar sind nicht ber&uuml;cksichtigt. Daten f&uuml;r Liechtenstein werden
+            stehen aktuell keine zur Verf&uuml;gung. Bei Bedarf kann dies aber noch Erg&auml;nzt werden."),
+            h3(HTML("Bugs, Probleme & Erweiterungsw&uuml;nsche")),
+            HTML("Wenn Sie einen Fehler / ein Problem finden oder eine Idee haben, wie das Dashboard verbessert werden k&ouml;nnte,
+            erstellen Sie bitte ein Problem auf"), tags$a(href = "https://github.com/chschoenenberger/covid19_dashboard_ch/issues",
+              "Github"), HTML(". Ich werde versuchen, dem so schnell wie m&ouml;glich nachzugehen."),
+            h3("Beitragen"),
+            HTML("Wenn Sie eine Visualisierung oder weitere Informationen hinzuf&uuml;gen m&ouml;chten, k&ouml;nnen Sie auf"),
+            tags$a(href = "https://github.com/chschoenenberger/covid19_dashboard_ch", "Github"), HTML("einen Pull-Request
+            erstellen. Bei gr&ouml;sseren &Uuml;berarbeitungen bitte entweder das Repository forken oder ein Issue er&ouml;ffnen, damit wir es
+            diskutieren k&ouml;nnen."),
+            h3("Entwicklung"),
+            HTML("Christoph Sch&ouml;nenberger | Data Scientist @"),
+            tags$a(href = "https://www.zuehlke.com/ch/en/", HTML("Z&uuml;hlke Engineering AG")), "|",
             tags$a(href = "https://www.linkedin.com/in/cschonenberger/", "LinkedIn"), "|",
             tags$a(href = "https://twitter.com/ChSchonenberger", "Twitter"), "|",
             tags$a(href = "https://github.com/chschoenenberger/", "Github"),

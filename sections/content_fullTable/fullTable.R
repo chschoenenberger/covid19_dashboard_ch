@@ -14,8 +14,8 @@ getFullTableData <- function() {
       "active_new"         = sum(.$active_new),
     ) %>%
     mutate(
-      positive_casesNorm = round(sum(positive_cases) / max(population) * 100000, 2),
-      activeNorm    = round(sum(active) / max(population) * 100000, 2)
+      positive_casesNorm = round(positive_cases / population * 100000, 2),
+      activeNorm         = round(active / population * 100000, 2)
     ) %>%
     mutate(
       "positive_cases_newPer" = positive_cases_new / (positive_cases - positive_cases_new) * 100,
@@ -43,12 +43,12 @@ output$fullTable <- renderDataTable({
     "Kanton",
     "Total Positive F&auml;lle",
     "Neue Positive F&auml;lle",
-    "Total Positive F&auml;lle <br>(pro 100k Einwohner)",
+    "Total Positive F&auml;lle <br>(pro 100'000 Einwohner)",
     "Total Verstorben",
     "Neu Verstorben",
     "Total Aktive F&auml;lle",
     "Neue Aktive F&auml;lle",
-    "Total Aktive F&auml;lle <br>(pro 100k Einwohner)")
+    "Total Aktive F&auml;lle <br>(pro 100'000 Einwohner)")
   datatable(
     data,
     rownames  = FALSE,

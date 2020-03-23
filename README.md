@@ -1,7 +1,9 @@
 # COVID-19 Dashboard 
-This [dashboard](https://chschoenenberger.shinyapps.io/covid19_dashboard/) shows recent developments of the COVID-19 pandemic. The latest
-open data on the COVID-19 spread are regularly downloaded and displayed in
-a map, summary tables, key figures and plots.
+This [dashboard](https://chschoenenberger.shinyapps.io/covid19_dashboard_ch/) shows 
+recent developments of the COVID-19 pandemic in Switzerland. The latest open data on 
+the COVID-19 spread are regularly downloaded and displayed in a map, summary tables, 
+key figures and plots. Originally, a [global dashboard](https://chschoenenberger.shinyapps.io/covid19_dashboard/) 
+was developed. This has now been adapted for Switzerland. 
 
 ## Motivation
 Various companies thought that a global crisis is an excellent opportunity to 
@@ -34,6 +36,14 @@ the rsconnect library currently does not run smoothly with renv,
 deactivate renv by calling ``renv::deactivate()``. Afterwards you should
 be able to deploy the dashboard to Shinyapps using ``rsconnect::deployApp()``.
 
+## Data
+The COVID-19 data for Switzerland are collected by [Daniel Probst](https://twitter.com/skepteis) 
+several times a day from different sources and published on 
+[Github](https://github.com/daenuprobst/covid19-cases-switzerland). Thanks a lot for the great work!
+Note: For Switzerland there are currently no data on cured cases. Therefore they 
+are not included on this dashboard until they are available. Data for Liechtenstein 
+are currently not available. However, this can be supplemented if necessary. 
+
 ## Contribute
 If you want to add any visualization or further information feel free to create
 a pull request. For major rework either fork the repository or create
@@ -46,7 +56,7 @@ are not able to verify your expertise.
 
 ## Bugs, Issues & Enhancement Requests
 If you find any bug / issue or have an idea how to improve the dashboard,
-please create an [issue](https://github.com/chschoenenberger/covid19_dashboard/issues). 
+please create an [issue](https://github.com/chschoenenberger/covid19_dashboard_ch/issues). 
 I will try to look into it as soon as possible.
 
 ## License
