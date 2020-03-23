@@ -21,13 +21,18 @@ map <- leaflet(addLabel(data_latest)) %>%
   addProviderTiles(providers$HERE.satelliteDay, group = "Satellit") %>%
   addLayersControl(
     baseGroups    = c("Hell", "Satellit"),
-    overlayGroups = c("Positive F&auml;lle", "Positive F&auml;lle (pro 100'000 Einwohner)", "Verstorben", "Aktive F&auml;lle", "Aktive F&auml;lle (pro 100'000 Einwohner)"),
-    options       = layersControlOptions(collapsed = FALSE)
+    overlayGroups = c("Positive F&auml;lle", "Positive F&auml;lle (pro 100'000 Einwohner)", "Verstorben", "Aktive F&auml;lle", "Aktive F&auml;lle (pro 100'000 Einwohner)")
   ) %>%
   hideGroup(HTML("Positive F&auml;lle (pro 100'000 Einwohner)")) %>%
   hideGroup("Verstorben") %>%
   hideGroup("Aktive F&auml;lle") %>%
-  hideGroup("Aktive F&auml;lle (pro 100'000 Einwohner)")
+  hideGroup("Aktive F&auml;lle (pro 100'000 Einwohner)") %>%
+  addEasyButton(easyButton(
+    icon    = "glyphicon glyphicon-globe", title = "Gesamte Schweiz",
+    onClick = JS("function(btn, map){ map.setView([46.798333, 8.231944], 7); }"))) %>%
+  addEasyButton(easyButton(
+    icon    = "glyphicon glyphicon-map-marker", title = "Locate Me",
+    onClick = JS("function(btn, map){ map.locate({setView: true, maxZoom: 9}); }")))
 
 observe({
   req(input$timeSlider, input$overview_map_zoom)
