@@ -17,7 +17,7 @@ body_fullTable <- dashboardBody(
   ),
   fluidPage(
     fluidRow(
-      h3(paste0(HTML("&Uuml;bersichtstabelle ("), strftime(current_date, format = "%d.%m.%Y"), ")"),
+      h3(HTML(paste0("&Uuml;bersichtstabelle (", strftime(current_date, format = "%d.%m.%Y"), ")")),
         class = "box-title", style = "margin-top: 10px; font-size: 18px;"),
       div(
         dataTableOutput("fullTable"),
