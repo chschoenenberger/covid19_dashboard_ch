@@ -60,4 +60,4 @@ please create an [issue](https://github.com/chschoenenberger/covid19_dashboard_c
 I will try to look into it as soon as possible.
 
 ## License
-MIT © Christop Schönenberger
+MIT © Christoph Schönenberger
