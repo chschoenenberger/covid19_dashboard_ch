@@ -156,7 +156,7 @@ output$box_caseEvolution <- renderUI({
         title = "Entwicklung der F\U00E4lle seit Ausbruch",
         plotlyOutput("case_evolution"),
         column(
-          checkboxInput("checkbox_logCaseEvolution", label = "Logaritmische Y-Achse", value = FALSE),
+          checkboxInput("checkbox_logCaseEvolution", label = "Logarithmische Y-Achse", value = FALSE),
           width = 3,
           style = "float: right; padding: 10px; margin-right: 50px"
         ),
