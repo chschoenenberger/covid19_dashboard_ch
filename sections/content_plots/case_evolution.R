@@ -2,9 +2,9 @@ output$case_evolution <- renderPlotly({
   data <- data_evolution %>%
     group_by(date) %>%
     summarise(
-      "positive_cases" = sum(positive_cases),
-      "deceased"       = sum(deceased),
-      "active"         = sum(active)
+      "positive_cases" = sum(positive_cases, na.rm = T),
+      "deceased"       = sum(deceased, na.rm = T),
+      "active"         = sum(active, na.rm = T)
     ) %>%
     as.data.frame()
 
@@ -28,7 +28,7 @@ output$selectize_casesByCanton <- renderUI({
   selectizeInput(
     "caseEvolution_canton",
     label    = "Select Countries",
-    choices  = unique(data_evolution$canton_name),
+    choices  = unique(data_evolution$name),
     selected = top5_cantons,
     multiple = TRUE
   )
@@ -36,8 +36,8 @@ output$selectize_casesByCanton <- renderUI({
 
 output$case_evolution_byCanton <- renderPlotly({
   data <- data_evolution %>%
-    select(canton_name, date, positive_cases, deceased, population) %>%
-    filter(if (is.null(input$caseEvolution_canton)) TRUE else canton_name %in% input$caseEvolution_canton) %>%
+    select(name, date, positive_cases, deceased, population) %>%
+    filter(if (is.null(input$caseEvolution_canton)) TRUE else name %in% input$caseEvolution_canton) %>%
     as.data.frame()
 
   if (input$checkbox_per100kEvolutionCanton) {
@@ -50,13 +50,13 @@ output$case_evolution_byCanton <- renderPlotly({
   }
 
   req(length(data$positive_cases) > 0)
-  p <- plot_ly(data = data, x = ~date, y = ~positive_cases, color = ~canton_name, type = 'scatter', mode = 'lines',
-    legendgroup     = ~canton_name) %>%
-    add_trace(data = data, x = ~date, y = ~deceased, color = ~canton_name, line = list(dash = 'dash'),
-      legendgroup  = ~canton_name, showlegend = FALSE) %>%
-    add_trace(data = data[which(data$canton_name == data$canton_name[1]),],
+  p <- plot_ly(data = data, x = ~date, y = ~positive_cases, color = ~name, type = 'scatter', mode = 'lines',
+    legendgroup     = ~name) %>%
+    add_trace(data = data, x = ~date, y = ~deceased, color = ~name, line = list(dash = 'dash'),
+      legendgroup  = ~name, showlegend = FALSE) %>%
+    add_trace(data = data[which(data$name == data$name[1]),],
       x            = ~date, y = -100, line = list(color = 'rgb(0, 0, 0)'), legendgroup = 'helper', name = "Positive F\U00E4lle") %>%
-    add_trace(data = data[which(data$canton_name == data$canton_name[1]),],
+    add_trace(data = data[which(data$name == data$name[1]),],
       x            = ~date, y = -100, line = list(color = 'rgb(0, 0, 0)', dash = 'dash'), legendgroup = 'helper', name = "Verstorben") %>%
     layout(
       yaxis = list(title = "# F\U00E4lle", rangemode = "nonnegative"),
@@ -77,7 +77,7 @@ output$selectize_casesByCanton_new <- renderUI({
   selectizeInput(
     "selectize_casesByCanton_new",
     label    = "Kanton",
-    choices  = c("Alle", unique(data_evolution$canton_name)),
+    choices  = c("Alle", unique(data_evolution$name)),
     selected = "Alle"
   )
 })
@@ -89,8 +89,8 @@ output$case_evolution_new <- renderPlotly({
     select(-lat, -long, -canton, -population, -positive_cases, -deceased, -active) %>%
     rename("Positive F\U00E4lle" = positive_cases_new, "Verstorben" = deceased_new, "Aktive F\U00E4lle" = active_new) %>%
     pivot_longer(cols = c("Positive F\U00E4lle", Verstorben, "Aktive F\U00E4lle"), names_to = "var", values_to = "value_new") %>%
-    filter(if (input$selectize_casesByCanton_new == "Alle") TRUE else (canton_name %in% input$selectize_casesByCanton_new)) %>%
-    group_by(date, var, canton_name) %>%
+    filter(if (input$selectize_casesByCanton_new == "Alle") TRUE else (name %in% input$selectize_casesByCanton_new)) %>%
+    group_by(date, var, name) %>%
     summarise(new_cases = sum(value_new))
 
   if (input$selectize_casesByCanton_new == "Alle") {
@@ -110,7 +110,7 @@ output$selectize_casesByCantonAfter10th <- renderUI({
   selectizeInput(
     "caseEvolution_cantonAfter10th",
     label    = "Kanton",
-    choices  = unique(data_evolution$canton_name),
+    choices  = unique(data_evolution$name),
     selected = top5_cantons,
     multiple = TRUE
   )
@@ -120,11 +120,11 @@ output$case_evolution_after10 <- renderPlotly({
   req(!is.null(input$checkbox_per100kEvolutionCanton10th))
 
   data <- data_evolution %>%
-    select(canton_name, population, date, positive_cases) %>%
+    select(name, population, date, positive_cases) %>%
     arrange(date) %>%
     filter(positive_cases >= 10) %>%
-    group_by(canton_name, population) %>%
-    filter(if (is.null(input$caseEvolution_cantonAfter10th)) TRUE else canton_name %in% input$caseEvolution_cantonAfter10th) %>%
+    group_by(name, population) %>%
+    filter(if (is.null(input$caseEvolution_cantonAfter10th)) TRUE else name %in% input$caseEvolution_cantonAfter10th) %>%
     mutate("daysSince" = row_number()) %>%
     ungroup() %>%
     as.data.frame()
@@ -133,7 +133,7 @@ output$case_evolution_after10 <- renderPlotly({
     data$positive_cases <- data$positive_cases / data$population * 100000
   }
 
-  p <- plot_ly(data = data, x = ~daysSince, y = ~positive_cases, color = ~canton_name, type = 'scatter', mode = 'lines') %>%
+  p <- plot_ly(data = data, x = ~daysSince, y = ~positive_cases, color = ~name, type = 'scatter', mode = 'lines') %>%
     layout(
       yaxis = list(title = "# F\U00E4lle"),
       xaxis = list(title = "# Tage seit dem 10. Fall")

@@ -2,7 +2,7 @@ library("htmltools")
 
 addLabel <- function(data) {
   data$label <- paste0(
-    '<b>', data$canton_name, '</b><br>
+    '<b>', data$name, '</b><br>
     <table style="width:120px;">
     <tr><td>Positive F&auml;lle:</td><td align="right">', data$positive_cases, '</td></tr>
     <tr><td>Verstorben:</td><td align="right">', data$deceased, '</td></tr>

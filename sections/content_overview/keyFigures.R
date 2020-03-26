@@ -5,7 +5,7 @@ sumData <- function(date) {
       summarise(
         positive_cases = sum(positive_cases),
         deceased       = sum(deceased),
-        cantons        = n_distinct(canton_name)
+        cantons = n_distinct(name) - if_else("Liechtenstein" %in% .$name, 1, 0)
       )
     return(data)
   }

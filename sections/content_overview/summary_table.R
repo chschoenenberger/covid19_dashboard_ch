@@ -1,22 +1,22 @@
 output$summaryTables <- renderUI({
-    dataTableOutput("summaryDT_canton")
+  dataTableOutput("summaryDT_canton")
 })
 
-output$summaryDT_canton <- renderDataTable(getSummaryDT(data_atDate(current_date), "canton_name", selectable = TRUE))
+output$summaryDT_canton <- renderDataTable(getSummaryDT(data_atDate(current_date), "name", selectable = TRUE))
 proxy_summaryDT_canton  <- dataTableProxy("summaryDT_canton")
 
 observeEvent(input$timeSlider, {
   data <- data_atDate(input$timeSlider) %>%
-    select(canton_name, positive_cases, deceased, active)
+    select(name, positive_cases, deceased, active)
   replaceData(proxy_summaryDT_canton, data, rownames = FALSE)
 }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
 observeEvent(input$summaryDT_canton_row_last_clicked, {
-  selectedRow     <- input$summaryDT_canton_row_last_clicked
-  selectedCanton <- unlist(data_atDate(input$timeSlider)[selectedRow, "canton_name"])
-  location        <- data_evolution %>%
-    distinct(canton_name, lat, long) %>%
-    filter(canton_name == selectedCanton) %>%
+  selectedRow    <- input$summaryDT_canton_row_last_clicked
+  selectedCanton <- unlist(data_atDate(input$timeSlider)[selectedRow, "name"])
+  location       <- data_evolution %>%
+    distinct(name, lat, long) %>%
+    filter(name == selectedCanton) %>%
     summarise(
       lat  = mean(lat),
       long = mean(long)
@@ -38,7 +38,7 @@ summariseData <- function(df, groupBy) {
 
 getSummaryDT <- function(data, groupBy, selectable = FALSE) {
   data <- data_atDate(current_date) %>%
-    select(canton_name, positive_cases, deceased, active)
+    select(name, positive_cases, deceased, active)
   datatable(
     na.omit(data),
     rownames  = FALSE,

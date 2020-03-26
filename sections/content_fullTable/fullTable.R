@@ -4,7 +4,7 @@ getFullTableData <- function() {
     filter(date == current_date) %>%
     select(-date, -lat, -long, -canton) %>%
     add_row(
-      "canton_name"        = "Schweiz",
+      "name"               = "Schweiz",
       "positive_cases"     = sum(.$positive_cases),
       "deceased"           = sum(.$deceased),
       "population"         = 8570000,
@@ -33,7 +33,7 @@ getFullTableData <- function() {
         active_new, if_else(!is.na(active_newPer), sprintf(" (%+.2f %%)", active_newPer), ""))
     ) %>%
     select(-population) %>%
-    select(canton_name, positive_cases, positive_cases_new, positive_casesNorm, deceased, deceased_new,
+    select(name, positive_cases, positive_cases_new, positive_casesNorm, deceased, deceased_new,
       active, active_new, activeNorm, positive_cases_newPer, deceased_newPer, active_newPer)
 }
 
@@ -84,7 +84,7 @@ output$fullTable <- renderDataTable({
     )
   ) %>%
     formatStyle(
-      columns    = "canton_name",
+      columns    = "name",
       fontWeight = "bold"
     ) %>%
     formatStyle(
