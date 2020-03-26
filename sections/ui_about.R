@@ -28,13 +28,13 @@ body_about <- dashboardBody(
             tags$a(href = "https://medium.com/@ch.schoenenberger/covid-19-open-source-dashboard-fa1d2b4cd985",
               "Medium Artikel"), ".",
             h3("Daten"),
-            HTML("Die COVID-19 Daten f&uuml;r die Schweiz werden von"), tags$a(href = "https://twitter.com/skepteis", "Daniel Probst"),
+            HTML("Die COVID-19 Daten f&uuml;r die Schweiz werden vom"), tags$a(href = "https://statistik.zh.ch/internet/justiz_inneres/statistik/de/home.html",
+              HTML("Statistischen Amt des Kanton Z&uuml;rich")),
             HTML("mehrmals t&auml;glich von verschiedenen Quellen zusammengetragen und auf"),
-            tags$a(href = "https://github.com/daenuprobst/covid19-cases-switzerland", "Github"), HTML("ver&ouml;ffentlicht.
+            tags$a(href = "https://github.com/openZH/covid_19", "Github"), HTML("ver&ouml;ffentlicht.
             Herzlichen Dank an dieser Stelle f&uuml;r die grossartige Arbeit!<br>
-            Hinweis: F&uuml;r die Schweiz gibt es momentan keine Daten zu den geheilten F&auml;llen. Daher werden diese auf diesem
-            Dashboard bis solche Verf&uuml;gbar sind nicht ber&uuml;cksichtigt. Daten f&uuml;r Liechtenstein werden
-            stehen aktuell keine zur Verf&uuml;gung. Bei Bedarf kann dies aber noch Erg&auml;nzt werden."),
+            Hinweis: F&uuml;r die Schweiz gibt es momentan keine Daten zu den geheilten F&auml;llen. Daher werden diese
+            wie folgt gesch&auml;tzt: <i>Bekannten F&auml;lle vor zwei Wochen - aktuelle Verstorben</i>."),
             h3(HTML("Bugs, Probleme & Erweiterungsw&uuml;nsche")),
             HTML("Wenn Sie einen Fehler / ein Problem finden oder eine Idee haben, wie das Dashboard verbessert werden k&ouml;nnte,
             erstellen Sie bitte ein Problem auf"), tags$a(href = "https://github.com/chschoenenberger/covid19_dashboard_ch/issues",

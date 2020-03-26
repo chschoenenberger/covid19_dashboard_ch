@@ -22,9 +22,12 @@ map <- leaflet(addLabel(data_latest)) %>%
   addProviderTiles(providers$HERE.satelliteDay, group = "Satellit") %>%
   addLayersControl(
     baseGroups    = c("Hell", "Satellit"),
-    overlayGroups = c("Positive F&auml;lle", "Positive F&auml;lle (pro 100'000 Einwohner)", "Verstorben", "Aktive F&auml;lle", "Aktive F&auml;lle (pro 100'000 Einwohner)")
+    overlayGroups = c("Positive F&auml;lle", "Positive F&auml;lle (pro 100'000 Einwohner)",
+      "Genesene F&auml;lle (gesch&auml;tzt)", "Verstorben", "Aktive F&auml;lle",
+      "Aktive F&auml;lle (pro 100'000 Einwohner)")
   ) %>%
   hideGroup(HTML("Positive F&auml;lle (pro 100'000 Einwohner)")) %>%
+  hideGroup("Genesene F&auml;lle (gesch&auml;tzt)") %>%
   hideGroup("Verstorben") %>%
   hideGroup("Aktive F&auml;lle") %>%
   hideGroup("Aktive F&auml;lle (pro 100'000 Einwohner)") %>%
@@ -63,7 +66,18 @@ observe({
       fillOpacity  = 0.5,
       label        = ~label,
       labelOptions = labelOptions(textsize = 15),
-      group = "Positive F&auml;lle (pro 100'000 Einwohner)"
+      group        = "Positive F&auml;lle (pro 100'000 Einwohner)"
+    ) %>%
+    addCircleMarkers(
+      lng          = ~long,
+      lat          = ~lat,
+      radius       = ~log(recovered^(zoomLevel / 2)),
+      stroke       = FALSE,
+      color        = "#005900",
+      fillOpacity  = 0.5,
+      label        = ~label,
+      labelOptions = labelOptions(textsize = 15),
+      group        = "Genesene F&auml;lle (gesch&auml;tzt)"
     ) %>%
     addCircleMarkers(
       lng          = ~long,

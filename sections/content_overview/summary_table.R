@@ -7,7 +7,7 @@ proxy_summaryDT_canton  <- dataTableProxy("summaryDT_canton")
 
 observeEvent(input$timeSlider, {
   data <- data_atDate(input$timeSlider) %>%
-    select(name, positive_cases, deceased, active)
+    select(name, positive_cases, recovered, deceased, active)
   replaceData(proxy_summaryDT_canton, data, rownames = FALSE)
 }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
@@ -27,11 +27,11 @@ observeEvent(input$summaryDT_canton_row_last_clicked, {
 
 getSummaryDT <- function(data, groupBy, selectable = FALSE) {
   data <- data_atDate(current_date) %>%
-    select(name, positive_cases, deceased, active)
+    select(name, positive_cases, recovered, deceased, active)
   datatable(
     na.omit(data),
     rownames  = FALSE,
-    colnames = c("Kanton", "Positiv", "Verstorben", "Aktiv"),
+    colnames  = c("Kanton", "Positiv", "Genesen (gesch\U00E4tzt)", "Verstorben", "Aktiv"),
     options   = list(
       order          = list(1, "desc"),
       scrollX        = TRUE,
