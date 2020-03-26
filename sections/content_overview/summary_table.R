@@ -25,17 +25,6 @@ observeEvent(input$summaryDT_canton_row_last_clicked, {
     setView(lng = location$long, lat = location$lat, zoom = 8)
 })
 
-summariseData <- function(df, groupBy) {
-  df %>%
-    group_by(!!sym(groupBy)) %>%
-    summarise(
-      "Positive Fälle" = sum(positive_cases),
-      "Verstorben"  = sum(deceased),
-      "Aktive Fälle"    = sum(active)
-    ) %>%
-    as.data.frame()
-}
-
 getSummaryDT <- function(data, groupBy, selectable = FALSE) {
   data <- data_atDate(current_date) %>%
     select(name, positive_cases, deceased, active)

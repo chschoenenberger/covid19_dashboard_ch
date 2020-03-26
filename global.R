@@ -57,13 +57,14 @@ data_evolution <- data_evolution %>%
   arrange(date) %>%
   group_by(canton, name, population, lat, long) %>%
   fill(ncumul_tested, positive_cases, ncumul_hosp, ncumul_ICU, ncumul_vent, ncumul_released, deceased) %>%
-  replace_na(list(deceased = 0, positive_cases = 0)) %>%
+  replace_na(list(deceased = 0, positive_cases = 0, ncumul_released = 0)) %>%
   mutate(
     recovered          = lag(positive_cases, 14, default = 0) - deceased,
     recovered          = ifelse(recovered > 0, recovered, 0),
     recovered          = ifelse(ncumul_released > recovered, ncumul_released, recovered),
     active             = (positive_cases - deceased - recovered),
     positive_cases_new = positive_cases - lag(positive_cases, 1, default = 0),
+    recovered_new      = recovered - lag(recovered, 1, default = 0),
     deceased_new       = deceased - lag(deceased, 1, default = 0),
     active_new         = active - lag(active, 1, default = 0)
   ) %>%

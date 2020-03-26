@@ -5,6 +5,7 @@ addLabel <- function(data) {
     '<b>', data$name, '</b><br>
     <table style="width:120px;">
     <tr><td>Positive F&auml;lle:</td><td align="right">', data$positive_cases, '</td></tr>
+    <tr><td>Genesen (gesch&auml;tzt):</td><td align="right">', data$recovered, '</td></tr>
     <tr><td>Verstorben:</td><td align="right">', data$deceased, '</td></tr>
     <tr><td>Aktive F&auml;lle:</td><td align="right">', data$active, '</td></tr>
     </table>'

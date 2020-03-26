@@ -4,8 +4,9 @@ sumData <- function(date) {
       filter(positive_cases > 0 | deceased > 0) %>%
       summarise(
         positive_cases = sum(positive_cases),
+        recovered      = sum(recovered),
         deceased       = sum(deceased),
-        cantons = n_distinct(name) - if_else("Liechtenstein" %in% .$name, 1, 0)
+        cantons        = n_distinct(name) - if_else("Liechtenstein" %in% .$name, 1, 0)
       )
     return(data)
   }
@@ -18,12 +19,14 @@ key_figures <- reactive({
 
   data_new <- list(
     new_positive_cases = (data$positive_cases - data_yesterday$positive_cases) / data_yesterday$positive_cases * 100,
+    new_recovered      = (data$recovered - data_yesterday$recovered) / data_yesterday$recovered * 100,
     new_deceased       = (data$deceased - data_yesterday$deceased) / data_yesterday$deceased * 100,
     new_cantons        = data$cantons - data_yesterday$cantons
   )
 
   keyFigures <- list(
     "positive_cases" = HTML(paste(format(data$positive_cases, big.mark = " "), sprintf("<h4>(%+.1f %%)</h4>", data_new$new_positive_cases))),
+    "recovered"      = HTML(paste(format(data$recovered, big.mark = " "), sprintf("<h4>(%+.1f %%)</h4>", data_new$new_recovered))),
     "deceased"       = HTML(paste(format(data$deceased, big.mark = " "), sprintf("<h4>(%+.1f %%)</h4>", data_new$new_deceased))),
     "cantons"        = HTML(paste(format(data$cantons, big.mark = " "), "/ 26", sprintf("<h4>(%+d)</h4>", data_new$new_cantons)))
   )
@@ -35,6 +38,16 @@ output$valueBox_positive_cases <- renderValueBox({
     key_figures()$positive_cases,
     subtitle = HTML("Positive F&auml;lle"),
     icon     = icon("file-medical"),
+    color    = "light-blue",
+    width    = NULL
+  )
+})
+
+output$valueBox_recovered <- renderValueBox({
+  valueBox(
+    key_figures()$recovered,
+    subtitle = HTML("Genesene F&auml;lle (gesch&auml;tzt)"),
+    icon     = icon("heart"),
     color    = "light-blue",
     width    = NULL
   )
@@ -62,9 +75,10 @@ output$box_keyFigures <- renderUI(box(
   title = paste0("Kennzahlen (", strftime(input$timeSlider, format = "%d.%m.%Y"), ")"),
   fluidRow(
     column(
-      valueBoxOutput("valueBox_positive_cases", width = 4),
-      valueBoxOutput("valueBox_deceased", width = 4),
-      valueBoxOutput("valueBox_cantons", width = 4),
+      valueBoxOutput("valueBox_positive_cases", width = 3),
+      valueBoxOutput("valueBox_recovered", width = 3),
+      valueBoxOutput("valueBox_deceased", width = 3),
+      valueBoxOutput("valueBox_cantons", width = 3),
       width = 12,
       style = "margin-left: -20px"
     )

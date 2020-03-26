@@ -1,17 +1,19 @@
 getFullTableData <- function() {
   padding_left <- max(str_length(data_evolution$positive_cases))
-  data <- data_evolution %>%
+  data         <- data_evolution %>%
     filter(date == current_date) %>%
     select(-date, -lat, -long, -canton) %>%
     add_row(
       "name"               = "Schweiz",
-      "positive_cases"     = sum(.$positive_cases),
-      "deceased"           = sum(.$deceased),
+      "positive_cases"     = sum(data_latest[data_latest$name != "Liechtenstein", "positive_cases"]),
+      "recovered"          = sum(data_latest[data_latest$name != "Liechtenstein", "recovered"]),
+      "deceased"           = sum(data_latest[data_latest$name != "Liechtenstein", "deceased"]),
       "population"         = 8570000,
-      "active"             = sum(.$active),
-      "positive_cases_new" = sum(.$positive_cases_new),
-      "deceased_new"       = sum(.$deceased_new),
-      "active_new"         = sum(.$active_new),
+      "active"             = sum(data_latest[data_latest$name != "Liechtenstein", "active"]),
+      "positive_cases_new" = sum(data_latest[data_latest$name != "Liechtenstein", "positive_cases_new"]),
+      "recovered_new"      = sum(data_latest[data_latest$name != "Liechtenstein", "recovered_new"]),
+      "deceased_new"       = sum(data_latest[data_latest$name != "Liechtenstein", "deceased_new"]),
+      "active_new"         = sum(data_latest[data_latest$name != "Liechtenstein", "active_new"]),
     ) %>%
     mutate(
       positive_casesNorm = round(positive_cases / population * 100000, 2),
@@ -19,31 +21,40 @@ getFullTableData <- function() {
     ) %>%
     mutate(
       "positive_cases_newPer" = positive_cases_new / (positive_cases - positive_cases_new) * 100,
-      "deceased_newPer"  = deceased_new / (deceased - deceased_new) * 100,
-      "active_newPer"    = active_new / (active - active_new) * 100
+      "recovered_newPer"      = recovered_new / (recovered - recovered_new) * 100,
+      "deceased_newPer"       = deceased_new / (deceased - deceased_new) * 100,
+      "active_newPer"         = active_new / (active - active_new) * 100
     ) %>%
     mutate_at(vars(contains('_newPer')), list(~na_if(., Inf))) %>%
     mutate_at(vars(contains('_newPer')), list(~na_if(., 0))) %>%
     mutate(
       positive_cases_new = str_c(str_pad(positive_cases_new, width = padding_left, side = "left", pad = "0"), "|",
         positive_cases_new, if_else(!is.na(positive_cases_newPer), sprintf(" (%+.2f %%)", positive_cases_newPer), "")),
-      deceased_new  = str_c(str_pad(deceased_new, width = padding_left, side = "left", pad = "0"), "|",
+      recovered_new      = str_c(str_pad(recovered_new, width = padding_left, side = "left", pad = "0"), "|",
+        recovered_new, if_else(!is.na(recovered_newPer), sprintf(" (%+.2f %%)", recovered_newPer), "")),
+      deceased_new       = str_c(str_pad(deceased_new, width = padding_left, side = "left", pad = "0"), "|",
         deceased_new, if_else(!is.na(deceased_newPer), sprintf(" (%+.2f %%)", deceased_newPer), "")),
-      active_new    = str_c(str_pad(active_new, width = padding_left, side = "left", pad = "0"), "|",
+      active_new         = str_c(str_pad(active_new, width = padding_left, side = "left", pad = "0"), "|",
         active_new, if_else(!is.na(active_newPer), sprintf(" (%+.2f %%)", active_newPer), ""))
     ) %>%
     select(-population) %>%
-    select(name, positive_cases, positive_cases_new, positive_casesNorm, deceased, deceased_new,
-      active, active_new, activeNorm, positive_cases_newPer, deceased_newPer, active_newPer)
+    select(name, ncumul_tested, positive_cases, positive_cases_new, positive_casesNorm, ncumul_hosp, ncumul_ICU,
+      recovered, recovered_new, deceased, deceased_new, active, active_new, activeNorm, positive_cases_newPer,
+      recovered_newPer, deceased_newPer, active_newPer)
 }
 
 output$fullTable <- renderDataTable({
   data       <- getFullTableData()
   columNames <- c(
     "Kanton",
+    "Total Tests",
     "Total Positive F&auml;lle",
     "Neue Positive F&auml;lle",
     "Total Positive F&auml;lle <br>(pro 100'000 Einwohner)",
+    "Hospitalisiert",
+    "Intensivstation",
+    "Total Genesene F&auml;lle (gesch&auml;tzt)",
+    "Neue Genesene F&auml;lle (gesch&auml;tzt)",
     "Total Verstorben",
     "Neu Verstorben",
     "Total Aktive F&auml;lle",
@@ -57,7 +68,7 @@ output$fullTable <- renderDataTable({
     selection = "none",
     options   = list(
       pageLength     = -1,
-      order          = list(6, "desc"),
+      order          = list(11, "desc"),
       scrollX        = TRUE,
       scrollY        = "calc(100vh - 250px)",
       scrollCollapse = TRUE,
@@ -65,7 +76,7 @@ output$fullTable <- renderDataTable({
       server         = FALSE,
       columnDefs     = list(
         list(
-          targets = c(2, 5, 7),
+          targets = c(3, 8, 10, 12),
           render  = JS(
             "function(data, type, row, meta) {
                 split = data.split('|')
@@ -79,7 +90,7 @@ output$fullTable <- renderDataTable({
         ),
         list(className = 'dt-right', targets = 1:ncol(data) - 1),
         list(width = '100px', targets = 0),
-        list(visible = FALSE, targets = 9:11)
+        list(visible = FALSE, targets = 14:17)
       )
     )
   ) %>%
@@ -98,6 +109,11 @@ output$fullTable <- renderDataTable({
       valueColumns    = "deceased_newPer",
       backgroundColor = styleInterval(c(10, 20, 33, 50, 75), c("#FFFFFF", "#FFE5E5", "#FFB2B2", "#FF7F7F", "#FF4C4C", "#983232")),
       color           = styleInterval(75, c("#000000", "#FFFFFF"))
+    ) %>%
+    formatStyle(
+      columns         = "recovered_new",
+      valueColumns    = "recovered_newPer",
+      backgroundColor = styleInterval(c(10, 20, 33), c("NULL", "#CCE4CC", "#99CA99", "#66B066"))
     ) %>%
     formatStyle(
       columns         = "active_new",
