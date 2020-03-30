@@ -28,15 +28,15 @@ body_overview <- dashboardBody(
       )),
     fluidRow(
       column(
-        sliderInput(
-          "timeSlider",
-          label      = HTML("Datum ausw&auml;hlen"),
-          min        = min(data_evolution$date, na.rm = T),
-          max        = max(data_evolution$date, na.rm = T),
-          value      = max(data_evolution$date, na.rm = T),
-          width      = "100%",
-          timeFormat = "%d.%m.%Y",
-          animate    = animationOptions(loop = TRUE)
+          sliderInput(
+            "timeSlider",
+            label      = HTML("Datum ausw&auml;hlen"),
+            min        = min(data_evolution$date, na.rm = T),
+            max        = max(data_evolution$date, na.rm = T),
+            value      = max(data_evolution$date, na.rm = T),
+            width      = "100%",
+            timeFormat = "%d.%m.%Y",
+            animate    = animationOptions(loop = TRUE)
         ),
         width = 12,
         style = 'padding-left:15px; padding-right:15px;'

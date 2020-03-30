@@ -17,8 +17,9 @@ body_fullTable <- dashboardBody(
   ),
   fluidPage(
     fluidRow(
-      h3(HTML(paste0("&Uuml;bersichtstabelle (", strftime(current_date, format = "%d.%m.%Y"), ")")),
-        class = "box-title", style = "margin-top: 10px; font-size: 18px;"),
+      #h3(HTML(paste0("&Uuml;bersichtstabelle (", strftime(current_date, format = "%d.%m.%Y"), ")")),
+      h3(HTML(paste0("&Uuml;bersichtstabelle ", textOutput("selected_date"))),
+         class = "box-title", style = "margin-top: 10px; font-size: 18px;"),
       div(
         dataTableOutput("fullTable"),
         style = "margin-top: -30px"
@@ -36,6 +37,16 @@ body_fullTable <- dashboardBody(
         )
       ),
       width = 12
+    ),
+    sliderInput(
+      "overviewSlider",
+      label      = HTML("Datum ausw&auml;hlen"),
+      min        = min(data_evolution$date, na.rm = T),
+      max        = max(data_evolution$date, na.rm = T),
+      value      = max(data_evolution$date, na.rm = T),
+      width      = "100%",
+      timeFormat = "%d.%m.%Y",
+      animate    = animationOptions(loop = TRUE)
     )
   )
 )

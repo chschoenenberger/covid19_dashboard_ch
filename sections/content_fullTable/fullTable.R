@@ -1,19 +1,20 @@
-getFullTableData <- function() {
+getFullTableData <- function(selectedDate) {
   padding_left <- max(str_length(data_evolution$positive_cases))
+  data_selected <- data_atDate(selectedDate)
   data         <- data_evolution %>%
-    filter(date == current_date) %>%
+    filter(date == selectedDate) %>%
     select(-date, -lat, -long, -canton) %>%
     add_row(
       "name"               = "Schweiz",
-      "positive_cases"     = sum(data_latest[data_latest$name != "Liechtenstein", "positive_cases"]),
-      "recovered"          = sum(data_latest[data_latest$name != "Liechtenstein", "recovered"]),
-      "deceased"           = sum(data_latest[data_latest$name != "Liechtenstein", "deceased"]),
+      "positive_cases"     = sum(data_selected[data_selected$name != "Liechtenstein", "positive_cases"]),
+      "recovered"          = sum(data_selected[data_selected$name != "Liechtenstein", "recovered"]),
+      "deceased"           = sum(data_selected[data_selected$name != "Liechtenstein", "deceased"]),
       "population"         = 8570000,
-      "active"             = sum(data_latest[data_latest$name != "Liechtenstein", "active"]),
-      "positive_cases_new" = sum(data_latest[data_latest$name != "Liechtenstein", "positive_cases_new"]),
-      "recovered_new"      = sum(data_latest[data_latest$name != "Liechtenstein", "recovered_new"]),
-      "deceased_new"       = sum(data_latest[data_latest$name != "Liechtenstein", "deceased_new"]),
-      "active_new"         = sum(data_latest[data_latest$name != "Liechtenstein", "active_new"]),
+      "active"             = sum(data_latest[data_selected$name != "Liechtenstein", "active"]),
+      "positive_cases_new" = sum(data_latest[data_selected$name != "Liechtenstein", "positive_cases_new"]),
+      "recovered_new"      = sum(data_latest[data_selected$name != "Liechtenstein", "recovered_new"]),
+      "deceased_new"       = sum(data_latest[data_selected$name != "Liechtenstein", "deceased_new"]),
+      "active_new"         = sum(data_latest[data_selected$name != "Liechtenstein", "active_new"]),
     ) %>%
     mutate(
       positive_casesNorm = round(positive_cases / population * 100000, 2),
@@ -44,7 +45,7 @@ getFullTableData <- function() {
 }
 
 output$fullTable <- renderDataTable({
-  data       <- getFullTableData()
+  data       <- getFullTableData(selectedDate = input$timeSlider)
   columNames <- c(
     "Kanton",
     "Total Tests",
