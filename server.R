@@ -33,5 +33,5 @@ server <- function(input, output, session) {
   })
   
   #update date in table title
-  output$selected_date <- renderText({paste0( "(", strftime(input$timeSlider, format = "%d.%m.%Y"), ")")}) 
+  output$selected_date <- renderText({strftime(input$timeSlider, format = "%d.%m.%Y")}) 
 }

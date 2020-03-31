@@ -10,6 +10,7 @@ body_fullTable <- dashboardBody(
     tags$style(type = "text/css", ".legend .pos4 { background-color: #FF7F7F; }"),
     tags$style(type = "text/css", ".legend .pos5 { background-color: #FF4C4C; }"),
     tags$style(type = "text/css", ".legend .pos6 { background-color: #983232; }"),
+ #   tags$style(type = "text/css", ".legend .pos7 { background-color: #983232; }"),
     tags$style(type = "text/css", ".legend .neg1 { background-color: #FFFFFF; }"),
     tags$style(type = "text/css", ".legend .neg2 { background-color: #CCE4CC; }"),
     tags$style(type = "text/css", ".legend .neg3 { background-color: #99CA99; }"),

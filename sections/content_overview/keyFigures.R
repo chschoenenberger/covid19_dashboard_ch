@@ -72,7 +72,7 @@ output$valueBox_cantons <- renderValueBox({
 })
 
 output$box_keyFigures <- renderUI(box(
-  title = paste0("Kennzahlen (", strftime(input$timeSlider, format = "%d.%m.%Y"), ")"),
+  title = paste0("Kennzahlen - ", strftime(input$timeSlider, format = "%d.%m.%Y")),
   fluidRow(
     column(
       valueBoxOutput("valueBox_positive_cases", width = 3),
