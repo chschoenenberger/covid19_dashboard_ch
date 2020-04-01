@@ -28,19 +28,40 @@ output$case_evolution <- renderPlotly({
 
 output$selectize_casesByCanton <- renderUI({
   selectizeInput(
-    "caseEvolution_canton",
-    label    = "Select Countries",
-    choices  = unique(data_evolution$name),
+    "selectize_casesByCanton",
+    label    = "Select Kanton",
+    choices  = c("Alle", unique(data_evolution$name)),
     selected = top5_cantons,
     multiple = TRUE
   )
 })
 
 output$case_evolution_byCanton <- renderPlotly({
+  req(input$selectize_casesByCanton)
+
   data <- data_evolution %>%
     select(name, date, positive_cases, recovered, deceased, population) %>%
-    filter(if (is.null(input$caseEvolution_canton)) TRUE else name %in% input$caseEvolution_canton) %>%
+    filter(if (identical(input$selectize_casesByCanton, "Alle")) TRUE else name %in% input$selectize_casesByCanton) %>%
     as.data.frame()
+  
+  if ("Alle" %in% input$selectize_casesByCanton) {
+      data_all <- data_evolution %>%
+        select(name, date, positive_cases, recovered, deceased, population) %>%
+        group_by(date) %>%
+        summarise(positive_cases = sum(positive_cases),
+                recovered = sum(recovered),
+                deceased = sum(deceased)) %>%
+        as.data.frame()
+      data_all[, "name"] <- "Schweiz"
+      data_all[, "population"] <- 8570000
+      data_all <- data_all[, c("name","date","positive_cases","recovered","deceased","population")]
+      
+      if (length(input$selectize_casesByCanton) == 1) {
+        data <- data_all
+      } else {
+        data <- rbind(data, data_all)
+      }
+  } 
 
   if (input$checkbox_per100kEvolutionCanton) {
     data <- data %>%
@@ -119,7 +140,7 @@ output$selectize_casesByCantonAfter10th <- renderUI({
   selectizeInput(
     "caseEvolution_cantonAfter10th",
     label    = "Kanton",
-    choices  = unique(data_evolution$name),
+    choices  = c("Alle", unique(data_evolution$name)),
     selected = top5_cantons,
     multiple = TRUE
   )
@@ -135,7 +156,7 @@ output$selectize_casesSince10th <- renderUI({
 })
 
 output$case_evolution_after10 <- renderPlotly({
-  req(!is.null(input$checkbox_per100kEvolutionCanton10th), input$caseEvolution_var10th)
+  req(!is.null(input$checkbox_per100kEvolutionCanton10th), input$caseEvolution_var10th) 
 
   data <- data_evolution %>%
     select(name, population, date, positive_cases, deceased) %>%
@@ -146,6 +167,26 @@ output$case_evolution_after10 <- renderPlotly({
     mutate("daysSince" = row_number()) %>%
     ungroup() %>%
     as.data.frame()
+  
+  if ("Alle" %in% input$caseEvolution_cantonAfter10th) {
+    data_all <- data_evolution %>%
+      select(name, population, date, positive_cases, deceased) %>%
+      group_by(date) %>%
+      summarise(positive_cases = sum(positive_cases),
+                deceased = sum(deceased)) %>%
+      filter(if (input$caseEvolution_var10th == "positive_cases") positive_cases >= 10 else deceased >= 10) %>%
+      mutate("daysSince" = row_number()) %>%
+      as.data.frame()
+    data_all[, "name"] <- "Schweiz"
+    data_all[, "population"] <- 8570000
+    data_all <- data_all[, c("name","population", "date","positive_cases","deceased", "daysSince")]
+    
+    if (length(input$caseEvolution_cantonAfter10th) == 1) {
+      data <- data_all
+    } else {
+      data <- rbind(data, data_all)
+    }
+  }
 
   if (input$checkbox_per100kEvolutionCanton10th) {
     data$positive_cases <- data$positive_cases / data$population * 100000
