@@ -214,6 +214,77 @@ output$case_evolution_after10 <- renderPlotly({
   return(p)
 })
 
+output$selectize_casesByCantonDiff <- renderUI({
+  selectizeInput(
+    "caseEvolution_casesByCantonDiff",
+    label    = "Kanton",
+    choices  = c("Alle", unique(data_evolution$name)),
+    selected = top5_cantons,
+    multiple = TRUE
+  )
+})
+
+output$selectize_casesDiff <- renderUI({
+  selectizeInput(
+    "caseEvolution_varDiff",
+    label    = "Variable w\U00E4hlen",
+    choices  = list("Positive F\U00E4lle" = "positive_cases", "Verstorben" = "deceased"),
+    multiple = FALSE
+  )
+})
+
+output$case_evolution_Diff <- renderPlotly({
+  req(input$caseEvolution_casesByCantonDiff, input$caseEvolution_varDiff) 
+  
+  data <- data_evolution %>%
+    select(name, population, date, positive_cases, deceased) %>%
+    arrange(name, date) %>%
+    filter(if (identical(input$selectize_casesByCanton, "Alle")) TRUE else name %in% input$caseEvolution_casesByCantonDiff) %>%
+    as.data.frame()
+  
+  if ("Alle" %in% input$caseEvolution_casesByCantonDiff) {
+    data_all <- data_evolution %>%
+      select(name, population, date, positive_cases, deceased) %>%
+      group_by(date) %>%
+      summarise(positive_cases = sum(positive_cases),
+                deceased = sum(deceased)) %>%
+      as.data.frame()
+    data_all[, "name"] <- "Schweiz"
+    data_all[, "population"] <- 8570000
+    data_all <- data_all[, c("name","population", "date","positive_cases","deceased")]
+
+    if (length(input$caseEvolution_casesByCantonDiff) == 1) {
+      data <- data_all
+    } else {
+      data <- rbind(data, data_all)
+    }
+  }
+  
+  data <- data.frame(name = data$name[-1], population = data$population[-1], date = data$date[-1],
+                     100*round(apply(data[, c("positive_cases", "deceased")], 2, diff) / data[-nrow(data), c("positive_cases", "deceased")], 2))
+  data[is.na(data) | (data == Inf)] <- 0
+  if (sum(data$positive_cases<0) > 0) {
+    data <- data[-which(data$positive_cases<0),]
+  }
+  
+  if (input$caseEvolution_varDiff == "positive_cases") {
+    data$y <- data$positive_cases
+  } else {
+    data$y <- data$deceased
+  }
+  
+  p <- plot_ly(data = data, x = ~date, y = ~y, color = ~name, type = 'scatter', mode = 'lines') %>%
+    layout(
+      yaxis = list(title = "Differenz zum Vortag in %", range = c(0, 500)),
+      xaxis = list(title = "Datum")
+    )
+  
+  if (input$checkbox_logCaseEvolutionDiff) {
+    p <- layout(p, yaxis = list(type = "log", range = c(0, 3)))
+  }
+  return(p)
+})
+
 output$box_caseEvolution <- renderUI({
   tagList(
     fluidRow(
@@ -276,6 +347,28 @@ output$box_caseEvolution <- renderUI({
           column(
             checkboxInput("checkbox_logCaseEvolution10th", label = "Logarithmische Y-Achse", value = FALSE),
             checkboxInput("checkbox_per100kEvolutionCanton10th", label = "Pro 100'000 Einwohner", value = FALSE),
+            width = 3,
+            style = "float: right; padding: 10px; margin-right: 50px"
+          )
+        ),
+        width = 6
+      )
+    ),
+    fluidRow(
+      box(
+        title = "Entwicklung der t\U00E4glichen Differenzen zum Vortag",
+        plotlyOutput("case_evolution_Diff"),
+        fluidRow(
+          column(
+            uiOutput("selectize_casesByCantonDiff"),
+            width = 3,
+          ),
+          column(
+            uiOutput("selectize_casesDiff"),
+            width = 3
+          ),
+          column(
+            checkboxInput("checkbox_logCaseEvolutionDiff", label = "Logarithmische Y-Achse", value = FALSE),
             width = 3,
             style = "float: right; padding: 10px; margin-right: 50px"
           )
