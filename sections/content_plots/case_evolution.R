@@ -52,7 +52,7 @@ output$case_evolution_byCanton <- renderPlotly({
                 recovered = sum(recovered),
                 deceased = sum(deceased)) %>%
         as.data.frame()
-      data_all[, "name"] <- "Schweiz"
+      data_all[, "name"] <- "Schweiz_und_FL"
       data_all[, "population"] <- 8570000
       data_all <- data_all[, c("name","date","positive_cases","recovered","deceased","population")]
       
@@ -177,7 +177,7 @@ output$case_evolution_after10 <- renderPlotly({
       filter(if (input$caseEvolution_var10th == "positive_cases") positive_cases >= 10 else deceased >= 10) %>%
       mutate("daysSince" = row_number()) %>%
       as.data.frame()
-    data_all[, "name"] <- "Schweiz"
+    data_all[, "name"] <- "Schweiz_und_FL"
     data_all[, "population"] <- 8570000
     data_all <- data_all[, c("name","population", "date","positive_cases","deceased", "daysSince")]
     
@@ -249,7 +249,7 @@ output$case_evolution_Diff <- renderPlotly({
       summarise(positive_cases = sum(positive_cases),
                 deceased = sum(deceased)) %>%
       as.data.frame()
-    data_all[, "name"] <- "Schweiz"
+    data_all[, "name"] <- "Schweiz_und_FL"
     data_all[, "population"] <- 8570000
     data_all <- data_all[, c("name","population", "date","positive_cases","deceased")]
 

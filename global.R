@@ -32,10 +32,7 @@ updateData <- function() {
 updateData()
 demographics <- read_csv("data/demographics.csv")
 ch <- read_csv("data/COVID19_Fallzahlen_CH_total.csv")
-
-#browser()
-
-ch <- ch[-which(ch[, "date"] == "2020-03-30" & ch[, "abbreviation_canton_and_fl"] == "AR")[1],] # remove first of 2 entries for AR
+#ch <- ch[-which(ch[, "date"] == "2020-03-30" & ch[, "abbreviation_canton_and_fl"] == "AR")[1],] # remove first of 2 entries for AR
 
 data_evolution <- ch %>%
   select(-time, -source) %>%
