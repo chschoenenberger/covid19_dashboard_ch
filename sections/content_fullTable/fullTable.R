@@ -10,11 +10,11 @@ getFullTableData <- function(selectedDate) {
       "recovered"          = sum(data_selected[data_selected$name != "Liechtenstein", "recovered"]),
       "deceased"           = sum(data_selected[data_selected$name != "Liechtenstein", "deceased"]),
       "population"         = 8570000,
-      "active"             = sum(data_latest[data_selected$name != "Liechtenstein", "active"]),
-      "positive_cases_new" = sum(data_latest[data_selected$name != "Liechtenstein", "positive_cases_new"]),
-      "recovered_new"      = sum(data_latest[data_selected$name != "Liechtenstein", "recovered_new"]),
-      "deceased_new"       = sum(data_latest[data_selected$name != "Liechtenstein", "deceased_new"]),
-      "active_new"         = sum(data_latest[data_selected$name != "Liechtenstein", "active_new"]),
+      "active"             = sum(data_selected[data_selected$name != "Liechtenstein", "active"]),
+      "positive_cases_new" = sum(data_selected[data_selected$name != "Liechtenstein", "positive_cases_new"]),
+      "recovered_new"      = sum(data_selected[data_selected$name != "Liechtenstein", "recovered_new"]),
+      "deceased_new"       = sum(data_selected[data_selected$name != "Liechtenstein", "deceased_new"]),
+      "active_new"         = sum(data_selected[data_selected$name != "Liechtenstein", "active_new"]),
     ) %>%
     mutate(
       positive_casesNorm = round(positive_cases / population * 100000, 2),
