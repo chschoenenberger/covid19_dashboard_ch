@@ -1,5 +1,18 @@
+output$selectize_evolByCanton <- renderUI({
+  selectizeInput(
+    "selectize_evolByCanton",
+    label    = "Select Kanton",
+    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
+    selected = "Alle",
+    multiple = FALSE
+  )
+})
+
 output$case_evolution <- renderPlotly({
+  req(input$selectize_evolByCanton)
+  
   data <- data_evolution %>%
+    filter(if (identical(input$selectize_evolByCanton, "Alle")) TRUE else name %in% input$selectize_evolByCanton) %>%
     group_by(date) %>%
     summarise(
       "positive_cases" = sum(positive_cases, na.rm = T),
@@ -30,7 +43,7 @@ output$selectize_casesByCanton <- renderUI({
   selectizeInput(
     "selectize_casesByCanton",
     label    = "Select Kanton",
-    choices  = c("Alle", unique(data_evolution$name)),
+    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
     selected = top5_cantons,
     multiple = TRUE
   )
@@ -105,7 +118,7 @@ output$selectize_casesByCanton_new <- renderUI({
   selectizeInput(
     "selectize_casesByCanton_new",
     label    = "Kanton",
-    choices  = c("Alle", unique(data_evolution$name)),
+    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
     selected = "Alle"
   )
 })
@@ -140,7 +153,7 @@ output$selectize_casesByCantonAfter10th <- renderUI({
   selectizeInput(
     "caseEvolution_cantonAfter10th",
     label    = "Kanton",
-    choices  = c("Alle", unique(data_evolution$name)),
+    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
     selected = top5_cantons,
     multiple = TRUE
   )
@@ -218,7 +231,7 @@ output$selectize_casesByCantonDiff <- renderUI({
   selectizeInput(
     "caseEvolution_casesByCantonDiff",
     label    = "Kanton",
-    choices  = c("Alle", unique(data_evolution$name)),
+    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
     selected = top5_cantons,
     multiple = TRUE
   )
@@ -291,6 +304,10 @@ output$box_caseEvolution <- renderUI({
       box(
         title = "Entwicklung der F\U00E4lle seit Ausbruch",
         plotlyOutput("case_evolution"),
+        column(
+          uiOutput("selectize_evolByCanton"),
+          width = 3,
+        ),
         column(
           checkboxInput("checkbox_logCaseEvolution", label = "Logarithmische Y-Achse", value = FALSE),
           width = 3,
