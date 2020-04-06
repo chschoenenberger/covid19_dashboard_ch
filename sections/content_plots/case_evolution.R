@@ -1,8 +1,8 @@
 output$selectize_evolByCanton <- renderUI({
   selectizeInput(
     "selectize_evolByCanton",
-    label    = "Select Kanton",
-    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
+    label    = "Kanton",
+    choices  = c("Alle", unique(data_evolution$name)[order(unique(data_evolution$name))]),
     selected = "Alle",
     multiple = FALSE
   )
@@ -42,8 +42,8 @@ output$case_evolution <- renderPlotly({
 output$selectize_casesByCanton <- renderUI({
   selectizeInput(
     "selectize_casesByCanton",
-    label    = "Select Kanton",
-    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
+    label    = "Kanton",
+    choices  = c("Alle", unique(data_evolution$name)[order(unique(data_evolution$name))]),
     selected = top5_cantons,
     multiple = TRUE
   )
@@ -65,7 +65,7 @@ output$case_evolution_byCanton <- renderPlotly({
                 recovered = sum(recovered),
                 deceased = sum(deceased)) %>%
         as.data.frame()
-      data_all[, "name"] <- "Schweiz_und_FL"
+      data_all[, "name"] <- "Schweiz und FL"
       data_all[, "population"] <- 8570000
       data_all <- data_all[, c("name","date","positive_cases","recovered","deceased","population")]
       
@@ -118,7 +118,7 @@ output$selectize_casesByCanton_new <- renderUI({
   selectizeInput(
     "selectize_casesByCanton_new",
     label    = "Kanton",
-    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
+    choices  = c("Alle", unique(data_evolution$name)[order(unique(data_evolution$name))]),
     selected = "Alle"
   )
 })
@@ -153,7 +153,7 @@ output$selectize_casesByCantonAfter10th <- renderUI({
   selectizeInput(
     "caseEvolution_cantonAfter10th",
     label    = "Kanton",
-    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
+    choices  = c("Alle", unique(data_evolution$name)[order(unique(data_evolution$name))]),
     selected = top5_cantons,
     multiple = TRUE
   )
@@ -190,7 +190,7 @@ output$case_evolution_after10 <- renderPlotly({
       filter(if (input$caseEvolution_var10th == "positive_cases") positive_cases >= 10 else deceased >= 10) %>%
       mutate("daysSince" = row_number()) %>%
       as.data.frame()
-    data_all[, "name"] <- "Schweiz_und_FL"
+    data_all[, "name"] <- "Schweiz und FL"
     data_all[, "population"] <- 8570000
     data_all <- data_all[, c("name","population", "date","positive_cases","deceased", "daysSince")]
     
@@ -231,7 +231,7 @@ output$selectize_casesByCantonDiff <- renderUI({
   selectizeInput(
     "caseEvolution_casesByCantonDiff",
     label    = "Kanton",
-    choices  = c("Alle", unique(data_evolution$name))[order(unique(data_evolution$name))],
+    choices  = c("Alle", unique(data_evolution$name)[order(unique(data_evolution$name))]),
     selected = top5_cantons,
     multiple = TRUE
   )
@@ -262,7 +262,7 @@ output$case_evolution_Diff <- renderPlotly({
       summarise(positive_cases = sum(positive_cases),
                 deceased = sum(deceased)) %>%
       as.data.frame()
-    data_all[, "name"] <- "Schweiz_und_FL"
+    data_all[, "name"] <- "Schweiz und FL"
     data_all[, "population"] <- 8570000
     data_all <- data_all[, c("name","population", "date","positive_cases","deceased")]
 
@@ -292,9 +292,6 @@ output$case_evolution_Diff <- renderPlotly({
       xaxis = list(title = "Datum")
     )
   
-  if (input$checkbox_logCaseEvolutionDiff) {
-    p <- layout(p, yaxis = list(type = "log", range = c(0, 3)))
-  }
   return(p)
 })
 
@@ -383,11 +380,6 @@ output$box_caseEvolution <- renderUI({
           column(
             uiOutput("selectize_casesDiff"),
             width = 3
-          ),
-          column(
-            checkboxInput("checkbox_logCaseEvolutionDiff", label = "Logarithmische Y-Achse", value = FALSE),
-            width = 3,
-            style = "float: right; padding: 10px; margin-right: 50px"
           )
         ),
         width = 6

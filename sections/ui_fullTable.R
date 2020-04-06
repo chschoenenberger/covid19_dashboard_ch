@@ -1,6 +1,6 @@
 body_fullTable <- dashboardBody(
   tags$head(
-    tags$style(type = "text/css", ".legend { list-style: none; margin-left: -30px;}"),
+    tags$style(type = "text/css", ".legend { list-style: none; margin-left: -25px;}"),
     tags$style(type = "text/css", ".legend li { float: left; margin-right: 10px; position: relative; }"),
     tags$style(type = "text/css", ".legend span { border: 1px solid #ccc; float: left; width: 30px; height: 15px;
     margin-right: 5px; margin-top: 1px; position: relative;"),
@@ -17,7 +17,6 @@ body_fullTable <- dashboardBody(
   ),
   fluidPage(
     fluidRow(
-      #h3(HTML(paste0("&Uuml;bersichtstabelle (", strftime(current_date, format = "%d.%m.%Y"), ")")),
       h3(HTML(paste0("&Uuml;bersichtstabelle ", textOutput("selected_date"))),
          class = "box-title", style = "margin-top: 10px; font-size: 18px;"),
       div(
@@ -25,7 +24,7 @@ body_fullTable <- dashboardBody(
         style = "margin-top: -30px"
       ),
       div(
-        tags$h5("Wachstumsrate", style = "margin-left: 10px;"),
+        tags$h5("Wachstumsrate", style = "margin-left: 15px;"),
         tags$ul(class = "legend",
           tags$li(tags$span(class = "pos1"), " 0 % bis 10 %"),
           tags$li(tags$span(class = "pos2"), "10 % bis 20 %"),
@@ -38,15 +37,21 @@ body_fullTable <- dashboardBody(
       ),
       width = 12
     ),
-    sliderInput(
-      "overviewSlider",
-      label      = HTML("Datum ausw&auml;hlen"),
-      min        = min(data_evolution$date, na.rm = T),
-      max        = max(data_evolution$date, na.rm = T),
-      value      = max(data_evolution$date, na.rm = T),
-      width      = "100%",
-      timeFormat = "%d.%m.%Y",
-      animate    = animationOptions(loop = TRUE)
+    fluidRow(
+      column(
+        sliderInput(
+          "overviewSlider",
+          label      = HTML("Datum ausw&auml;hlen"),
+          min        = min(data_evolution$date, na.rm = T),
+          max        = max(data_evolution$date, na.rm = T),
+          value      = max(data_evolution$date, na.rm = T),
+          width      = "100%",
+          timeFormat = "%d.%m.%Y",
+          animate    = animationOptions(loop = TRUE)
+        ),
+        width = 12,
+        style = 'padding-left:15px; padding-right:15px;'
+      )
     )
   )
 )

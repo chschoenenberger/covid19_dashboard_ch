@@ -72,7 +72,7 @@ output$fullTable <- renderDataTable({
       pageLength     = -1,
       order          = list(12, "desc"),
       scrollX        = TRUE,
-      scrollY        = "calc(100vh - 250px)",
+      scrollY        = "57vh",
       scrollCollapse = TRUE,
       dom            = "ft",
       server         = FALSE,
