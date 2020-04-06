@@ -1,19 +1,20 @@
-getFullTableData <- function() {
+getFullTableData <- function(selectedDate) {
   padding_left <- max(str_length(data_evolution$positive_cases))
+  data_selected <- data_atDate(selectedDate)
   data         <- data_evolution %>%
-    filter(date == current_date) %>%
+    filter(date == selectedDate) %>%
     select(-date, -lat, -long, -canton) %>%
     add_row(
       "name"               = "Schweiz",
-      "positive_cases"     = sum(data_latest[data_latest$name != "Liechtenstein", "positive_cases"]),
-      "recovered"          = sum(data_latest[data_latest$name != "Liechtenstein", "recovered"]),
-      "deceased"           = sum(data_latest[data_latest$name != "Liechtenstein", "deceased"]),
+      "positive_cases"     = sum(data_selected[data_selected$name != "Liechtenstein", "positive_cases"]),
+      "recovered"          = sum(data_selected[data_selected$name != "Liechtenstein", "recovered"]),
+      "deceased"           = sum(data_selected[data_selected$name != "Liechtenstein", "deceased"]),
       "population"         = 8570000,
-      "active"             = sum(data_latest[data_latest$name != "Liechtenstein", "active"]),
-      "positive_cases_new" = sum(data_latest[data_latest$name != "Liechtenstein", "positive_cases_new"]),
-      "recovered_new"      = sum(data_latest[data_latest$name != "Liechtenstein", "recovered_new"]),
-      "deceased_new"       = sum(data_latest[data_latest$name != "Liechtenstein", "deceased_new"]),
-      "active_new"         = sum(data_latest[data_latest$name != "Liechtenstein", "active_new"]),
+      "active"             = sum(data_selected[data_selected$name != "Liechtenstein", "active"]),
+      "positive_cases_new" = sum(data_selected[data_selected$name != "Liechtenstein", "positive_cases_new"]),
+      "recovered_new"      = sum(data_selected[data_selected$name != "Liechtenstein", "recovered_new"]),
+      "deceased_new"       = sum(data_selected[data_selected$name != "Liechtenstein", "deceased_new"]),
+      "active_new"         = sum(data_selected[data_selected$name != "Liechtenstein", "active_new"]),
     ) %>%
     mutate(
       positive_casesNorm = round(positive_cases / population * 100000, 2),
@@ -38,13 +39,13 @@ getFullTableData <- function() {
         active_new, if_else(!is.na(active_newPer), sprintf(" (%+.2f %%)", active_newPer), ""))
     ) %>%
     select(-population) %>%
-    select(name, ncumul_tested, positive_cases, positive_cases_new, positive_casesNorm, ncumul_hosp, ncumul_ICU,
+    select(name, ncumul_tested, positive_cases, positive_cases_new, positive_casesNorm, ncumul_hosp, ncumul_ICU, ncumul_vent,
       recovered, recovered_new, deceased, deceased_new, active, active_new, activeNorm, positive_cases_newPer,
       recovered_newPer, deceased_newPer, active_newPer)
 }
 
 output$fullTable <- renderDataTable({
-  data       <- getFullTableData()
+  data       <- getFullTableData(selectedDate = input$timeSlider)
   columNames <- c(
     "Kanton",
     "Total Tests",
@@ -53,6 +54,7 @@ output$fullTable <- renderDataTable({
     "Total Positive F&auml;lle <br>(pro 100'000 Einwohner)",
     "Hospitalisiert",
     "Intensivstation",
+    "K&uuml;nstlich beatmet",
     "Total Genesene F&auml;lle (gesch&auml;tzt)",
     "Neue Genesene F&auml;lle (gesch&auml;tzt)",
     "Total Verstorben",
@@ -68,15 +70,15 @@ output$fullTable <- renderDataTable({
     selection = "none",
     options   = list(
       pageLength     = -1,
-      order          = list(11, "desc"),
+      order          = list(12, "desc"),
       scrollX        = TRUE,
-      scrollY        = "calc(100vh - 250px)",
+      scrollY        = "57vh",
       scrollCollapse = TRUE,
       dom            = "ft",
       server         = FALSE,
       columnDefs     = list(
         list(
-          targets = c(3, 8, 10, 12),
+          targets = c(3, 9, 11, 13),
           render  = JS(
             "function(data, type, row, meta) {
                 split = data.split('|')
@@ -90,7 +92,7 @@ output$fullTable <- renderDataTable({
         ),
         list(className = 'dt-right', targets = 1:ncol(data) - 1),
         list(width = '100px', targets = 0),
-        list(visible = FALSE, targets = 14:17)
+        list(visible = FALSE, targets = 15:18)
       )
     )
   ) %>%

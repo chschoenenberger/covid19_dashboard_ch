@@ -29,7 +29,6 @@ updateData <- function() {
 
 # Update with start of app
 updateData()
-
 demographics <- read_csv("data/demographics.csv")
 
 data_evolution <- read_csv("data/COVID19_Fallzahlen_CH_total.csv") %>%
