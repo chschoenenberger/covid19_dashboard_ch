@@ -17,8 +17,8 @@ body_fullTable <- dashboardBody(
   ),
   fluidPage(
     fluidRow(
-      h3(HTML(paste0("&Uuml;bersichtstabelle ", textOutput("selected_date"))),
-         class = "box-title", style = "margin-top: 10px; font-size: 18px;"),
+      h3(HTML(paste0("&Uuml;bersichtstabelle - ", textOutput("selected_date", inline = T))),
+        class = "box-title", style = "margin-top: 10px; font-size: 18px;"),
       div(
         dataTableOutput("fullTable"),
         style = "margin-top: -30px"
