@@ -12,7 +12,7 @@ source("utils.R", local = T)
 
 downloadGithubData <- function() {
   download.file(
-    url      = "https://raw.githubusercontent.com/openZH/covid_19/master/COVID19_Fallzahlen_CH_total.csv",
+    url      = "https://raw.githubusercontent.com/openZH/covid_19/master/COVID19_Fallzahlen_CH_total_v2.csv",
     destfile = "data/COVID19_Fallzahlen_CH_total.csv"
   )
 }
