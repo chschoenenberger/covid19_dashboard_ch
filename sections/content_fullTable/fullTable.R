@@ -1,20 +1,24 @@
 getFullTableData <- function(selectedDate) {
-  padding_left <- max(str_length(data_evolution$positive_cases))
+  padding_left  <- max(str_length(data_evolution$positive_cases))
   data_selected <- data_atDate(selectedDate)
-  data         <- data_evolution %>%
+  data          <- data_evolution %>%
     filter(date == selectedDate) %>%
     select(-date, -lat, -long, -canton) %>%
     add_row(
       "name"               = "Schweiz",
-      "positive_cases"     = sum(data_selected[data_selected$name != "Liechtenstein", "positive_cases"]),
-      "recovered"          = sum(data_selected[data_selected$name != "Liechtenstein", "recovered"]),
-      "deceased"           = sum(data_selected[data_selected$name != "Liechtenstein", "deceased"]),
+      "ncumul_tested"      = sum(data_selected[data_selected$name != "Liechtenstein", "ncumul_tested"], na.rm = T),
+      "positive_cases"     = sum(data_selected[data_selected$name != "Liechtenstein", "positive_cases"], na.rm = T),
+      "current_hosp"       = sum(data_selected[data_selected$name != "Liechtenstein", "current_hosp"], na.rm = T),
+      "current_icu"        = sum(data_selected[data_selected$name != "Liechtenstein", "current_icu"], na.rm = T),
+      "current_vent"       = sum(data_selected[data_selected$name != "Liechtenstein", "current_vent"], na.rm = T),
+      "recovered"          = sum(data_selected[data_selected$name != "Liechtenstein", "recovered"], na.rm = T),
+      "deceased"           = sum(data_selected[data_selected$name != "Liechtenstein", "deceased"], na.rm = T),
       "population"         = 8570000,
-      "active"             = sum(data_selected[data_selected$name != "Liechtenstein", "active"]),
-      "positive_cases_new" = sum(data_selected[data_selected$name != "Liechtenstein", "positive_cases_new"]),
-      "recovered_new"      = sum(data_selected[data_selected$name != "Liechtenstein", "recovered_new"]),
-      "deceased_new"       = sum(data_selected[data_selected$name != "Liechtenstein", "deceased_new"]),
-      "active_new"         = sum(data_selected[data_selected$name != "Liechtenstein", "active_new"]),
+      "active"             = sum(data_selected[data_selected$name != "Liechtenstein", "active"], na.rm = T),
+      "positive_cases_new" = sum(data_selected[data_selected$name != "Liechtenstein", "positive_cases_new"], na.rm = T),
+      "recovered_new"      = sum(data_selected[data_selected$name != "Liechtenstein", "recovered_new"], na.rm = T),
+      "deceased_new"       = sum(data_selected[data_selected$name != "Liechtenstein", "deceased_new"], na.rm = T),
+      "active_new"         = sum(data_selected[data_selected$name != "Liechtenstein", "active_new"], na.rm = T),
     ) %>%
     mutate(
       positive_casesNorm = round(positive_cases / population * 100000, 2),
