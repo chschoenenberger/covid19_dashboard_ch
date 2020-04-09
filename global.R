@@ -12,7 +12,7 @@ source("utils.R", local = T)
 
 downloadGithubData <- function() {
   download.file(
-    url      = "https://raw.githubusercontent.com/openZH/covid_19/master/COVID19_Fallzahlen_CH_total.csv",
+    url      = "https://raw.githubusercontent.com/openZH/covid_19/master/COVID19_Fallzahlen_CH_total_v2.csv",
     destfile = "data/COVID19_Fallzahlen_CH_total.csv"
   )
 }
@@ -42,7 +42,7 @@ data_evolution <- read_csv("data/COVID19_Fallzahlen_CH_total.csv") %>%
     deceased       = ncumul_deceased
   ) %>%
   # Make sure all dates are available for all cantons
-  pivot_longer(names_to = "var", cols = c(ncumul_tested, positive_cases, ncumul_hosp, ncumul_ICU, ncumul_vent, ncumul_released, deceased)) %>%
+  pivot_longer(names_to = "var", cols = c(ncumul_tested, positive_cases, current_hosp, current_icu, current_vent, ncumul_released, deceased)) %>%
   pivot_wider(id_cols = c(canton, name, population, lat, long, var), names_from = date, values_from = value)
 
 # Recreate old format
@@ -55,7 +55,7 @@ data_evolution <- data_evolution %>%
 data_evolution <- data_evolution %>%
   arrange(date) %>%
   group_by(canton, name, population, lat, long) %>%
-  fill(ncumul_tested, positive_cases, ncumul_hosp, ncumul_ICU, ncumul_vent, ncumul_released, deceased) %>%
+  fill(ncumul_tested, positive_cases, current_hosp, current_icu, current_vent, ncumul_released, deceased) %>%
   replace_na(list(deceased = 0, positive_cases = 0, ncumul_released = 0)) %>%
   mutate(
     recovered          = lag(positive_cases, 14, default = 0) - deceased,

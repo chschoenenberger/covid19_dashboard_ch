@@ -39,7 +39,7 @@ getFullTableData <- function(selectedDate) {
         active_new, if_else(!is.na(active_newPer), sprintf(" (%+.2f %%)", active_newPer), ""))
     ) %>%
     select(-population) %>%
-    select(name, ncumul_tested, positive_cases, positive_cases_new, positive_casesNorm, ncumul_hosp, ncumul_ICU, ncumul_vent,
+    select(name, ncumul_tested, positive_cases, positive_cases_new, positive_casesNorm, current_hosp, current_icu, current_vent,
       recovered, recovered_new, deceased, deceased_new, active, active_new, activeNorm, positive_cases_newPer,
       recovered_newPer, deceased_newPer, active_newPer)
 }
